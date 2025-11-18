@@ -1,4 +1,4 @@
-// sync logout
+// Multi-tab logout
 function broadcastLogout() {
   localStorage.setItem("logout", Date.now());
 }
@@ -6,24 +6,18 @@ window.addEventListener("storage", e => {
   if (e.key === "logout") location.href = "/";
 });
 
-// double-click logout
+// Double click logout
 logoutBtn?.addEventListener("dblclick", () => {
-  fetch('/logout', { method:'POST' })
-  .then(() => { broadcastLogout(); location.href='/'; });
+  fetch("/logout", { method:"POST" })
+    .then(() => {
+      broadcastLogout();
+      location.href = "/";
+    });
 });
 
-// live counter
-recipients.addEventListener("input", () => {
-  const total = recipients.value
-    .split(/[\n,]+/)
-    .map(e => e.trim())
-    .filter(Boolean).length;
-
-  emailCount.textContent = "Total Emails: " + total;
-});
-
-// send
+// SEND MAIL
 sendBtn?.addEventListener("click", () => {
+
   const body = {
     senderName: senderName.value,
     email: email.value.trim(),
@@ -34,6 +28,7 @@ sendBtn?.addEventListener("click", () => {
   };
 
   if (!body.email || !body.password || !body.recipients) {
+    statusMessage.innerText = "❌ Email, password & recipients required";
     alert("❌ Missing details");
     return;
   }
@@ -43,18 +38,20 @@ sendBtn?.addEventListener("click", () => {
 
   fetch("/send", {
     method: "POST",
-    headers: {"Content-Type":"application/json"},
+    headers: { "Content-Type":"application/json" },
     body: JSON.stringify(body)
   })
-  .then(r=>r.json())
-  .then(d=>{
-    statusMessage.innerText = (d.success?"✅ ":"❌ ") + d.message;
-    if (d.left !== undefined)
-      remainingCount.textContent = "Remaining this hour: " + d.left;
+  .then(r => r.json())
+  .then(d => {
+    statusMessage.innerText = (d.success ? "✅ " : "❌ ") + d.message;
 
-    alert((d.success?"✅ ":"❌ ") + d.message);
+    if (d.success) {
+      setTimeout(() => alert("✅ Mail Sent Successfully"), 300);
+    } else {
+      alert("❌ " + d.message);
+    }
   })
-  .finally(()=>{
+  .finally(() => {
     sendBtn.disabled = false;
     sendBtn.innerHTML = "Send All";
   });
