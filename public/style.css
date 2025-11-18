@@ -18,7 +18,9 @@ body{
   text-align:center;
   box-shadow:0 10px 30px rgba(0,0,0,0.12);
 }
+
 .login-logo{font-size:48px;margin-bottom:10px;}
+
 .login-card input{
   width:100%;
   padding:12px;
@@ -26,6 +28,7 @@ body{
   border:1px solid #cbd5e1;
   margin:8px 0;
 }
+
 .login-card button{
   width:100%;
   padding:12px;
@@ -35,9 +38,9 @@ body{
   border-radius:8px;
   cursor:pointer;
 }
+
 #loginStatus{
-  color:#ef4444;
-  margin-top:8px;
+  color:#ef4444;margin-top:8px;
 }
 
 /* MAIN */
@@ -52,9 +55,8 @@ body{
 
 .container h2{
   text-align:center;
-  margin-bottom:20px;
-  color:#111;
   font-size:32px;
+  margin-bottom:20px;
 }
 
 .row{
@@ -63,14 +65,11 @@ body{
   margin-bottom:20px;
 }
 
-.row input,
-.row textarea,
-.row button{
+.row input, .row textarea, .row button{
   flex:1;
   padding:14px;
   border-radius:10px;
   border:1px solid #cbd5e1;
-  font-size:15px;
 }
 
 .landscape-row{
@@ -78,7 +77,7 @@ body{
 }
 
 .bigbox{
-  min-height:180px;
+  min-height:200px;
   resize:vertical;
 }
 
@@ -90,18 +89,16 @@ body{
 
 .small-info{
   text-align:right;
+  margin-top:6px;
   font-size:14px;
   color:#1a73e8;
-  margin-top:6px;
 }
 
 .row button{
   background:#3b82f6;
   color:#fff;
   border:none;
-  border-radius:10px;
   font-size:18px;
-  font-weight:600;
   cursor:pointer;
 }
 
@@ -111,6 +108,5 @@ body{
 
 #statusMessage{
   text-align:center;
-  margin-top:5px;
   color:#ef4444;
 }
