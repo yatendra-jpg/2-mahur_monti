@@ -1,11 +1,11 @@
 {
-  "name": "fast-mailer-pro",
-  "version": "8.0.0",
+  "name": "fast-mail-launcher",
+  "version": "3.0.0",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
-  "engines": {
+  "engages": {
     "node": "18.x"
   },
   "dependencies": {
