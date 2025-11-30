@@ -13,19 +13,21 @@ app.use(express.static("public"));
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// SAFE LOGIN
+// SAFE LOGIN ID/PASS
 const LOGIN_ID = "montimahur882@#";
 const LOGIN_PASS = "montimahur882@#";
 
 app.post("/login", (req, res) => {
     const { id, password } = req.body;
+
     if (id === LOGIN_ID && password === LOGIN_PASS) {
         return res.json({ success: true });
     }
-    res.json({ success: false });
+
+    return res.json({ success: false });
 });
 
-// SAFE SINGLE MAIL SENDER (Legal)
+// SAFE SINGLE EMAIL SEND (LEGAL)
 app.post("/send", async (req, res) => {
     const { fromName, gmail, appPass, subject, body, to } = req.body;
 
@@ -47,9 +49,15 @@ app.post("/send", async (req, res) => {
 
         return res.json({ success: true });
 
-    } catch (err) {
-        return res.json({ success: false, message: "INVALID" });
+    } catch (error) {
+        return res.json({ success: false });
     }
 });
 
-app.listen(3000, () => console.log("SAFE MAIL SERVER RUNNING"));
+// SERVE UI
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "login.html"));
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log("SERVER RUNNING on PORT " + PORT));
