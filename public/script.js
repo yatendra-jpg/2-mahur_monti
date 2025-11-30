@@ -1,58 +1,51 @@
-// Multi-tab logout
-function broadcastLogout() {
-  localStorage.setItem("logout", Date.now());
+let count = 0;
+
+function update(){
+    document.getElementById("count").innerText = count;
 }
-window.addEventListener("storage", e => {
-  if (e.key === "logout") location.href = "/";
-});
 
-// Double click logout
-logoutBtn?.addEventListener("dblclick", () => {
-  fetch("/logout", { method:"POST" })
-    .then(() => {
-      broadcastLogout();
-      location.href = "/";
+function popup(msg, type){
+    const p = document.getElementById("popup");
+    p.innerHTML = msg;
+    p.style.background = type === "error" ? "#ff3b3b" : "#28c746";
+    p.style.top = "20px";
+    setTimeout(()=> p.style.top = "-80px",3000);
+}
+
+async function sendMail(){
+    sendBtn.disabled = true;
+    sendBtn.innerHTML = "Sending...";
+
+    let payload = {
+        fromName: fromName.value,
+        gmail: gmail.value,
+        appPass: appPass.value,
+        subject: subject.value,
+        body: body.value,
+        to: to.value
+    };
+
+    let res = await fetch("/send",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify(payload)
     });
-});
 
-// SEND MAIL
-sendBtn?.addEventListener("click", () => {
+    let data = await res.json();
 
-  const body = {
-    senderName: senderName.value,
-    email: email.value.trim(),
-    password: pass.value.trim(),
-    subject: subject.value,
-    message: message.value,
-    recipients: recipients.value.trim()
-  };
-
-  if (!body.email || !body.password || !body.recipients) {
-    statusMessage.innerText = "❌ Email, password & recipients required";
-    alert("❌ Missing details");
-    return;
-  }
-
-  sendBtn.disabled = true;
-  sendBtn.innerHTML = "⏳ Sending...";
-
-  fetch("/send", {
-    method: "POST",
-    headers: { "Content-Type":"application/json" },
-    body: JSON.stringify(body)
-  })
-  .then(r => r.json())
-  .then(d => {
-    statusMessage.innerText = (d.success ? "✅ " : "❌ ") + d.message;
-
-    if (d.success) {
-      setTimeout(() => alert("✅ Mail Sent Successfully"), 300);
+    if(data.success){
+        count++;
+        update();
+        popup("Mail Sent ✅","success");
     } else {
-      alert("❌ " + d.message);
+        popup("Wrong Gmail / App Password ☒","error");
     }
-  })
-  .finally(() => {
+
     sendBtn.disabled = false;
-    sendBtn.innerHTML = "Send All";
-  });
-});
+    sendBtn.innerHTML = "Send";
+}
+
+function logout(){
+    count = 0;
+    update();
+}
