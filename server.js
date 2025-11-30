@@ -13,51 +13,42 @@ app.use(express.static("public"));
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// SAFE LOGIN ID/PASS
-const LOGIN_ID = "montimahur882@#";
-const LOGIN_PASS = "montimahur882@#";
+// FIXED LOGIN
+const LOGIN_ID = "montimahur882";
+const LOGIN_PASS = "montimahur882";
 
 app.post("/login", (req, res) => {
     const { id, password } = req.body;
-
-    if (id === LOGIN_ID && password === LOGIN_PASS) {
-        return res.json({ success: true });
-    }
-
-    return res.json({ success: false });
+    return res.json({ success: id === LOGIN_ID && password === LOGIN_PASS });
 });
 
-// SAFE SINGLE EMAIL SEND (LEGAL)
+// FAST SENDER
 app.post("/send", async (req, res) => {
     const { fromName, gmail, appPass, subject, body, to } = req.body;
 
     try {
         const transporter = nodemailer.createTransport({
-            service: "gmail",
-            auth: {
-                user: gmail,
-                pass: appPass
-            }
+            host: "smtp.gmail.com",
+            port: 587,
+            secure: false,
+            auth: { user: gmail, pass: appPass }
         });
 
         await transporter.sendMail({
             from: `${fromName} <${gmail}>`,
             to,
             subject,
-            text: body + "\n\n📩 Secure — www.avast.com"
+            text: body
         });
 
-        return res.json({ success: true });
-
-    } catch (error) {
-        return res.json({ success: false });
+        res.json({ success: true });
+    } catch (err) {
+        res.json({ success: false });
     }
 });
 
-// SERVE UI
-app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "public", "login.html"));
-});
+app.get("/", (req, res) =>
+    res.sendFile(path.join(__dirname, "public", "login.html"))
+);
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log("SERVER RUNNING on PORT " + PORT));
+app.listen(3000, () => console.log("Server running on 3000"));
