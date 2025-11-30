@@ -3,7 +3,6 @@ body{
     font-family:Arial, sans-serif;
 }
 
-/* Main container */
 .main-box{
     width:80%;
     margin:auto;
@@ -14,7 +13,6 @@ body{
     box-shadow:0 0 25px #d8d8d8;
 }
 
-/* Top Icon */
 .icon-box{
     width:100%;
     text-align:center;
@@ -27,7 +25,6 @@ body{
     border-radius:10px;
 }
 
-/* Two input row */
 .row{
     display:flex;
     gap:20px;
@@ -42,7 +39,6 @@ body{
     border:1px solid #ccc;
 }
 
-/* Large textareas */
 .row-large{
     display:flex;
     gap:20px;
@@ -58,7 +54,6 @@ body{
     border:1px solid #ccc;
 }
 
-/* Buttons */
 button{
     flex:1;
     padding:15px;
@@ -74,7 +69,6 @@ button:disabled{
     background:#9cbcfc;
 }
 
-/* Popup */
 #popup{
     position:fixed;
     top:-80px;
@@ -87,7 +81,6 @@ button:disabled{
     transition:.4s;
 }
 
-/* Total Sent box */
 .sent-box{
     margin-top:20px;
     background:#f4f7ff;
