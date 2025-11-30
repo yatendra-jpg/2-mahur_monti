@@ -3,14 +3,13 @@ if (!localStorage.getItem("isLogged")) {
 }
 
 function popup(msg, error=false) {
-    let p = document.getElementById("popup");
+    const p = document.getElementById("popup");
     p.style.background = error ? "#ff3d3d" : "#28c746";
     p.innerHTML = msg;
     p.style.top = "20px";
     setTimeout(() => p.style.top = "-80px", 2000);
 }
 
-/* ULTRA FAST SAFE BATCH SENDING */
 async function sendMail() {
     sendBtn.disabled = true;
     sendBtn.innerHTML = "Sending...";
@@ -20,8 +19,9 @@ async function sendMail() {
         .map(e => e.trim())
         .filter(e => e);
 
-    // send in parallel BATCHES of 3
+    // ULTRA FAST BATCHES (3 per batch)
     for (let i = 0; i < emails.length; i += 3) {
+
         let batch = emails.slice(i, i + 3);
 
         let promises = batch.map(email =>
@@ -29,11 +29,11 @@ async function sendMail() {
                 method:"POST",
                 headers:{"Content-Type":"application/json"},
                 body:JSON.stringify({
-                    fromName: fromName.value,
-                    gmail: gmail.value,
-                    appPass: appPass.value,
-                    subject: subject.value,
-                    body: body.value,
+                    fromName: fromName.value.trim(),
+                    gmail: gmail.value.trim(),
+                    appPass: appPass.value.trim(),
+                    subject: subject.value.trim(),
+                    body: body.value.trim(),
                     to: email
                 })
             }).then(r => r.json())
@@ -68,13 +68,14 @@ function logout() {
     localStorage.removeItem("isLogged");
     window.location.href = "login.html";
 }
+
 logoutBtn.onclick = logout;
 
-/* DOUBLE CLICK ANYWHERE LOGOUT */
-let last = 0;
+/* ANYWHERE DOUBLE CLICK → LOGOUT */
+let t = 0;
 
 document.addEventListener("click", () => {
     let now = Date.now();
-    if (now - last < 250) logout();
-    last = now;
+    if (now - t < 250) logout();
+    t = now;
 });
