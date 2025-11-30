@@ -48,7 +48,7 @@ body{
 .title{
     text-align:center;
     font-size:34px;
-    margin-bottom:30px;
+    margin-bottom:28px;
 }
 
 .row, .row-large{
@@ -60,34 +60,23 @@ body{
 .row input, .row-large textarea{
     flex:1;
     padding:15px;
-    font-size:18px;
     border-radius:10px;
     border:1px solid #ccc;
+    font-size:18px;
 }
 
 .row-large textarea{
-    height:200px;
-}
-
-button{
-    flex:1;
-    padding:15px;
-    font-size:20px;
-    border:none;
-    border-radius:10px;
-    color:white;
-    cursor:pointer;
+    height:220px;
 }
 
 #sendBtn{
-    background:#1e63ff;
+    background:#2f7dff;
 }
 
 .blue-btn{
-    background:#ff3030 !important;
+    background:#2f7dff !important;
 }
 
-/* Popup */
 #popup{
     position:fixed;
     top:-70px;
