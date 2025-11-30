@@ -15,7 +15,7 @@ body{
 }
 
 .login-icon{
-    width:65px;
+    width:70px;
 }
 
 .login-box input{
@@ -31,22 +31,20 @@ body{
     width:100%;
     padding:15px;
     margin-top:20px;
+    font-size:18px;
     background:#2f7dff;
     border:none;
-    color:white;
-    font-size:18px;
     border-radius:10px;
-    cursor:pointer;
+    color:white;
 }
 
-/* LAUNCHER */
 .main-box{
     width:75%;
     max-width:1250px;
     margin:40px auto;
     padding:40px;
-    background:white;
     border-radius:25px;
+    background:white;
     box-shadow:0 0 40px #d0d0d0;
 }
 
@@ -56,9 +54,9 @@ body{
 }
 
 .mail-icon{
-    width:45px;
-    vertical-align:middle;
+    width:50px;
     margin-right:10px;
+    vertical-align:middle;
 }
 
 .row, .row-large{
@@ -83,28 +81,27 @@ body{
 button{
     flex:1;
     padding:18px;
-    font-size:22px;
-    border:none;
     border-radius:12px;
+    border:none;
+    font-size:22px;
     cursor:pointer;
-    background:#2f7dff;
     color:white;
+    background:#2f7dff;
 }
 
 #logoutBtn{
     background:#ff3d3d;
 }
 
-/* POPUP */
 #popup{
     position:fixed;
     top:-80px;
     left:50%;
     transform:translateX(-50%);
     padding:12px 25px;
-    background:#28c746;
     color:white;
+    background:#28c746;
     border-radius:10px;
     font-size:18px;
-    transition:0.3s;
+    transition:.3s;
 }
