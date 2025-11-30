@@ -4,15 +4,52 @@ body{
     margin:0;
 }
 
-/* MAIN BOX EXACT SIZE */
+/* LOGIN PAGE */
+.login-box{
+    width:400px;
+    margin:100px auto;
+    background:white;
+    padding:30px;
+    border-radius:20px;
+    text-align:center;
+    box-shadow:0 0 40px #d0d0d0;
+}
+
+.login-icon{
+    width:65px;
+    margin-bottom:15px;
+}
+
+.login-box input{
+    width:100%;
+    padding:15px;
+    margin-top:15px;
+    border:1px solid #ccc;
+    font-size:18px;
+    border-radius:10px;
+}
+
+.login-box button{
+    width:100%;
+    margin-top:20px;
+    padding:15px;
+    font-size:18px;
+    background:#2f7dff;
+    border:none;
+    color:white;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+/* LAUNCHER BOX */
 .main-box{
     width:75%;
     max-width:1250px;
     margin:40px auto;
-    padding:40px;
     background:white;
+    padding:40px;
     border-radius:25px;
-    box-shadow:0px 0px 40px #d5d5d5;
+    box-shadow:0 0 40px #d0d0d0;
 }
 
 .title{
@@ -22,7 +59,7 @@ body{
 }
 
 .mail-icon{
-    width:48px;
+    width:45px;
     vertical-align:middle;
     margin-right:10px;
 }
@@ -33,7 +70,8 @@ body{
     margin-bottom:25px;
 }
 
-.row input{
+.row input,
+.row-large textarea{
     flex:1;
     padding:18px;
     border-radius:12px;
@@ -42,16 +80,39 @@ body{
 }
 
 .row-large textarea{
-    flex:1;
-    padding:18px;
-    border-radius:12px;
-    border:1px solid #ccc;
-    font-size:18px;
     height:230px;
 }
 
-/* Buttons */
 button{
     flex:1;
     padding:18px;
+    font-size:22px;
+    border:none;
+    border-radius:12px;
+    cursor:pointer;
     background:#2f7dff;
+    color:white;
+}
+
+#logoutBtn{
+    background:#ff3d3d;
+}
+
+/* POPUP */
+#popup{
+    position:fixed;
+    top:-80px;
+    left:50%;
+    transform:translateX(-50%);
+    padding:12px 25px;
+    background:#28c746;
+    color:white;
+    border-radius:10px;
+    font-size:18px;
+    transition:.3s;
+}
+
+.small-info{
+    text-align:right;
+    font-size:15px;
+}
