@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>📧 Mail Sender</title>
+    <title>Fast Mail Launcher</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -11,9 +11,10 @@
 
 <div class="main-box">
 
-    <div class="icon-box">
+    <h1 class="title">
         <img src="https://cdn-icons-png.flaticon.com/512/561/561127.png" class="mail-icon">
-    </div>
+        Fast Mail Launcher
+    </h1>
 
     <div class="row">
         <input id="fromName" placeholder="Sender Name">
@@ -35,13 +36,13 @@
         <button id="logoutBtn">Logout</button>
     </div>
 
-    <div class="sent-box">
-        Total Sent: <span id="count">0</span>
-    </div>
+    <p class="small-info">
+        Total Emails: <span id="count">0</span><br>
+        Remaining this hour: 31
+    </p>
 
 </div>
 
 <script src="script.js"></script>
-
 </body>
 </html>
