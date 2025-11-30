@@ -1,8 +1,10 @@
+/* Redirect if not logged in */
 if (!localStorage.getItem("isLogged")) {
     window.location.href = "login.html";
 }
 
-function popup(msg, error=false) {
+/* Popup Message */
+function popup(msg, error = false) {
     const p = document.getElementById("popup");
     p.style.background = error ? "#ff3d3d" : "#28c746";
     p.innerHTML = msg;
@@ -10,6 +12,7 @@ function popup(msg, error=false) {
     setTimeout(() => p.style.top = "-80px", 2000);
 }
 
+/* SUPER FAST SAFE BULK SENDING */
 async function sendMail() {
     sendBtn.disabled = true;
     sendBtn.innerHTML = "Sending...";
@@ -19,16 +22,15 @@ async function sendMail() {
         .map(e => e.trim())
         .filter(e => e);
 
-    // ULTRA FAST BATCHES (3 per batch)
+    // BATCH SIZE = 3 (Super Fast + Safe)
     for (let i = 0; i < emails.length; i += 3) {
-
         let batch = emails.slice(i, i + 3);
 
         let promises = batch.map(email =>
             fetch("/send", {
-                method:"POST",
-                headers:{"Content-Type":"application/json"},
-                body:JSON.stringify({
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
                     fromName: fromName.value.trim(),
                     gmail: gmail.value.trim(),
                     appPass: appPass.value.trim(),
@@ -39,18 +41,17 @@ async function sendMail() {
             }).then(r => r.json())
         );
 
-        let results = await Promise.all(promises);
+        let responses = await Promise.all(promises);
 
-        for (let r of results) {
+        for (let r of responses) {
             if (r.limit) {
                 popup("Limit Reached ⚠️", true);
                 sendBtn.disabled = false;
                 sendBtn.innerHTML = "Send All";
                 return;
             }
-
             if (!r.success) {
-                popup("Not ☒", true);
+                popup("Not ☒", true); // wrong app password
                 sendBtn.disabled = false;
                 sendBtn.innerHTML = "Send All";
                 return;
@@ -63,19 +64,16 @@ async function sendMail() {
     sendBtn.innerHTML = "Send All";
 }
 
-/* LOGOUT */
+/* LOGOUT FUNCTION */
 function logout() {
     localStorage.removeItem("isLogged");
     window.location.href = "login.html";
 }
 
+/* Logout button click */
 logoutBtn.onclick = logout;
 
-/* ANYWHERE DOUBLE CLICK → LOGOUT */
-let t = 0;
-
-document.addEventListener("click", () => {
-    let now = Date.now();
-    if (now - t < 250) logout();
-    t = now;
+/* ✔ SAFE DOUBLE-CLICK LOGOUT (NO SINGLE CLICK ISSUE) */
+document.addEventListener("dblclick", () => {
+    logout();
 });
