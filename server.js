@@ -13,25 +13,25 @@ app.use(express.static("public"));
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// LOGIN FIX
-const LOGIN_ID = "montimahur882";
-const LOGIN_PASS = "montimahur882";
+// SAFE LOGIN
+const LOGIN_ID = "yourloginid";
+const LOGIN_PASS = "yourloginpass";
 
-// PER EMAIL-ID LIMIT (SAFE)
-let limits = {};  
+// SAFE RATE LIMITING (NO SPAM)
+let sentHistory = {};
 
-function checkLimit(email) {
+function canSend(gmail) {
     const now = Date.now();
 
-    if (!limits[email]) {
-        limits[email] = { count: 0, reset: now + 3600000 };
+    if (!sentHistory[gmail]) {
+        sentHistory[gmail] = { count: 0, reset: now + 3600000 };
     }
 
-    if (now > limits[email].reset) {
-        limits[email] = { count: 0, reset: now + 3600000 };
+    if (now > sentHistory[gmail].reset) {
+        sentHistory[gmail] = { count: 0, reset: now + 3600000 };
     }
 
-    return limits[email].count < 30;
+    return sentHistory[gmail].count < 30;
 }
 
 app.post("/login", (req, res) => {
@@ -43,7 +43,7 @@ app.post("/login", (req, res) => {
 app.post("/send", async (req, res) => {
     const { fromName, gmail, appPass, subject, body, to } = req.body;
 
-    if (!checkLimit(gmail)) {
+    if (!canSend(gmail)) {
         return res.json({ limit: true });
     }
 
@@ -60,16 +60,16 @@ app.post("/send", async (req, res) => {
             text: body
         });
 
-        limits[gmail].count++;
+        sentHistory[gmail].count++;
         res.json({ success: true });
 
-    } catch (e) {
+    } catch {
         res.json({ success: false });
     }
 });
 
-app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "public/login.html"));
-});
+app.get("/", (req, res) =>
+    res.sendFile(path.join(__dirname, "public/login.html"))
+);
 
-app.listen(3000, () => console.log("SERVER RUNNING 3000"));
+app.listen(3000, () => console.log("SAFE MAIL SERVER RUNNING"));
