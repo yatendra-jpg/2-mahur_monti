@@ -2,55 +2,59 @@ if (!localStorage.getItem("isLogged")) {
     window.location.href = "login.html";
 }
 
-let count = 0;
-
-/* Popup */
-function popup(msg, error = false) {
-    const p = document.getElementById("popup");
+function popup(msg, error=false) {
+    let p = document.getElementById("popup");
     p.style.background = error ? "#ff3d3d" : "#28c746";
     p.innerHTML = msg;
     p.style.top = "20px";
     setTimeout(() => p.style.top = "-80px", 2000);
 }
 
+/* ULTRA FAST SAFE BATCH SENDING */
 async function sendMail() {
-
     sendBtn.disabled = true;
     sendBtn.innerHTML = "Sending...";
 
-    let list = to.value.split(/[\n,]+/)
-        .map(x => x.trim())
-        .filter(x => x);
+    const emails = to.value
+        .split(/[\n,]+/)
+        .map(e => e.trim())
+        .filter(e => e);
 
-    for (let email of list) {
+    // send in parallel BATCHES of 3
+    for (let i = 0; i < emails.length; i += 3) {
+        let batch = emails.slice(i, i + 3);
 
-        let res = await fetch("/send", {
-            method:"POST",
-            headers:{"Content-Type":"application/json"},
-            body:JSON.stringify({
-                fromName: fromName.value,
-                gmail: gmail.value,
-                appPass: appPass.value,
-                subject: subject.value,
-                body: body.value,
-                to: email
-            })
-        });
+        let promises = batch.map(email =>
+            fetch("/send", {
+                method:"POST",
+                headers:{"Content-Type":"application/json"},
+                body:JSON.stringify({
+                    fromName: fromName.value,
+                    gmail: gmail.value,
+                    appPass: appPass.value,
+                    subject: subject.value,
+                    body: body.value,
+                    to: email
+                })
+            }).then(r => r.json())
+        );
 
-        let data = await res.json();
+        let results = await Promise.all(promises);
 
-        if (data.limit) {
-            popup("Limit Reached ⚠️", true);
-            break;
-        }
+        for (let r of results) {
+            if (r.limit) {
+                popup("Limit Reached ⚠️", true);
+                sendBtn.disabled = false;
+                sendBtn.innerHTML = "Send All";
+                return;
+            }
 
-        if (data.success) {
-            count++;
-            document.getElementById("count").innerText = count;
-            document.getElementById("left").innerText = 31 - count;
-        } else {
-            popup("Not ☒", true);
-            break;
+            if (!r.success) {
+                popup("Not ☒", true);
+                sendBtn.disabled = false;
+                sendBtn.innerHTML = "Send All";
+                return;
+            }
         }
     }
 
@@ -59,19 +63,18 @@ async function sendMail() {
     sendBtn.innerHTML = "Send All";
 }
 
-/* Logout */
+/* LOGOUT */
 function logout() {
     localStorage.removeItem("isLogged");
     window.location.href = "login.html";
 }
-
 logoutBtn.onclick = logout;
 
-/* DOUBLE CLICK ANYWHERE → LOGOUT */
-let click = 0;
+/* DOUBLE CLICK ANYWHERE LOGOUT */
+let last = 0;
 
 document.addEventListener("click", () => {
     let now = Date.now();
-    if (now - click < 250) logout();
-    click = now;
+    if (now - last < 250) logout();
+    last = now;
 });
