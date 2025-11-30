@@ -6,13 +6,18 @@
 </head>
 
 <body>
-<div class="login-box">
-    <h2>Login Panel</h2>
 
-    <input id="login_id" placeholder="Login ID">
+<div class="login-box">
+    <img src="https://cdn-icons-png.flaticon.com/512/561/561127.png" class="login-icon">
+
+    <h1>Welcome Back</h1>
+    <p class="sub">Login to continue</p>
+
+    <input id="login_id" placeholder="Username">
     <input id="login_pass" placeholder="Password" type="password">
 
     <button onclick="login()">Login</button>
+
     <p id="msg"></p>
 </div>
 
@@ -22,9 +27,9 @@ async function login() {
     const password = login_pass.value.trim();
 
     let res = await fetch("/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id, password })
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({id, password})
     });
 
     let data = await res.json();
@@ -33,9 +38,10 @@ async function login() {
         localStorage.setItem("isLogged", "true");
         window.location.href = "launcher.html";
     } else {
-        msg.innerHTML = "❌ Wrong ID/Password";
+        msg.innerHTML = "❌ Wrong ID / Password";
     }
 }
 </script>
+
 </body>
 </html>
