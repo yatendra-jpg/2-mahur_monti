@@ -13,11 +13,11 @@ app.use(express.static("public"));
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// LOGIN (as requested)
+// LOGIN (safe)
 const LOGIN_ID = "montimahur882";
 const LOGIN_PASS = "montimahur882";
 
-// LIMIT — 31 EMAILS PER GMAIL PER HOUR
+// LIMIT: 31 emails / hour per Gmail
 let limitData = {};
 
 function checkLimit(email) {
@@ -72,4 +72,4 @@ app.get("/", (req, res) =>
     res.sendFile(path.join(__dirname, "public/login.html"))
 );
 
-app.listen(3000, () => console.log("SAFE MAIL SERVER RUNNING"));
+app.listen(3000, () => console.log("SERVER RUNNING"));
