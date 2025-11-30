@@ -1,32 +1,33 @@
-/* Redirect if not logged in */
+/* Login check */
 if (!localStorage.getItem("isLogged")) {
     window.location.href = "login.html";
 }
 
 /* Popup */
-function popup(msg, error=false) {
-    let p = document.getElementById("popup");
+function popup(msg, error = false) {
+    const p = document.getElementById("popup");
     p.style.background = error ? "#ff3d3d" : "#28c746";
     p.innerHTML = msg;
     p.style.top = "20px";
     setTimeout(() => p.style.top = "-70px", 2000);
 }
 
-/* SAFE + FAST SENDING */
-async function sendMail() {
+/* SEND EMAILS */
+document.getElementById("sendBtn").onclick = async function () {
+
     sendBtn.disabled = true;
     sendBtn.innerHTML = "Sending...";
 
-    const list = to.value.split(/[\n,]+/)
+    const list = to.value
+        .split(/[\n,]+/)
         .map(x => x.trim())
         .filter(x => x);
 
     for (let email of list) {
-
         let res = await fetch("/send", {
-            method:"POST",
-            headers:{"Content-Type":"application/json"},
-            body:JSON.stringify({
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
                 fromName: fromName.value,
                 gmail: gmail.value,
                 appPass: appPass.value,
@@ -42,3 +43,27 @@ async function sendMail() {
             popup("Limit Reached ⚠️", true);
             break;
         }
+
+        if (!data.success) {
+            popup("Not ☒", true);
+            sendBtn.disabled = false;
+            sendBtn.innerHTML = "Send All";
+            return;
+        }
+    }
+
+    popup("Mail Sent ✅");
+    sendBtn.disabled = false;
+    sendBtn.innerHTML = "Send All";
+};
+
+/* LOGOUT */
+function logout() {
+    localStorage.removeItem("isLogged");
+    window.location.href = "login.html";
+}
+
+logoutBtn.onclick = logout;
+
+/* DOUBLE CLICK LOGOUT */
+document.addEventListener("dblclick", logout);
