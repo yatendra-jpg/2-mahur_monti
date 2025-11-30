@@ -8,16 +8,10 @@
 <body>
 
 <div class="login-box">
-    <img src="https://cdn-icons-png.flaticon.com/512/561/561127.png" class="login-icon">
-
     <h1>Login</h1>
-    <p class="sub">Enter your credentials</p>
-
     <input id="login_id" placeholder="Username">
-    <input id="login_pass" placeholder="Password" type="password">
-
+    <input id="login_pass" type="password" placeholder="Password">
     <button onclick="login()">Login</button>
-
     <p id="msg"></p>
 </div>
 
@@ -27,8 +21,8 @@ async function login() {
         method:"POST",
         headers:{"Content-Type":"application/json"},
         body:JSON.stringify({
-            id: login_id.value.trim(),
-            password: login_pass.value.trim()
+            id: login_id.value,
+            password: login_pass.value
         })
     });
 
