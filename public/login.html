@@ -23,13 +23,13 @@
 
 <script>
 async function login() {
-    const id = login_id.value.trim();
-    const password = login_pass.value.trim();
-
     let res = await fetch("/login", {
         method:"POST",
         headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({id, password})
+        body:JSON.stringify({
+            id: login_id.value.trim(),
+            password: login_pass.value.trim()
+        })
     });
 
     let data = await res.json();
