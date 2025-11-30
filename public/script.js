@@ -5,44 +5,48 @@ function update(){
 }
 
 function popup(msg, type){
-    const p = document.getElementById("popup");
+    let p = document.getElementById("popup");
     p.innerHTML = msg;
     p.style.background = type === "error" ? "#ff3b3b" : "#28c746";
     p.style.top = "20px";
-    setTimeout(()=> p.style.top = "-80px",3000);
+    setTimeout(()=> p.style.top = "-80px", 3000);
 }
 
 async function sendMail(){
     sendBtn.disabled = true;
     sendBtn.innerHTML = "Sending...";
 
-    let payload = {
-        fromName: fromName.value,
-        gmail: gmail.value,
-        appPass: appPass.value,
-        subject: subject.value,
-        body: body.value,
-        to: to.value
-    };
+    let recList = to.value.split(/[\n,]+/).map(x => x.trim()).filter(x => x);
 
-    let res = await fetch("/send",{
-        method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify(payload)
-    });
+    for (let emailTo of recList){
 
-    let data = await res.json();
+        let res = await fetch("/send", {
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({
+                fromName: fromName.value,
+                gmail: gmail.value,
+                appPass: appPass.value,
+                subject: subject.value,
+                body: body.value,
+                to: emailTo
+            })
+        });
 
-    if(data.success){
-        count++;
-        update();
-        popup("Mail Sent ✅","success");
-    } else {
-        popup("Wrong Gmail / App Password ☒","error");
+        let data = await res.json();
+
+        if(data.success){
+            count++;
+            update();
+        } else {
+            popup("❌ Wrong Gmail/App Password","error");
+            break;
+        }
     }
 
     sendBtn.disabled = false;
-    sendBtn.innerHTML = "Send";
+    sendBtn.innerHTML = "Send All";
+    popup("Mail Sent ✅","success");
 }
 
 function logout(){
