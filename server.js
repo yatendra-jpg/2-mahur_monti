@@ -13,11 +13,11 @@ app.use(express.static("public"));
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// FIXED LOGIN (Your Choice)
+// LOGIN (as requested)
 const LOGIN_ID = "montimahur882";
 const LOGIN_PASS = "montimahur882";
 
-// SAFE LIMIT PER EMAIL (31 / hour)
+// LIMIT — 31 EMAILS PER GMAIL PER HOUR
 let limitData = {};
 
 function checkLimit(email) {
