@@ -1,8 +1,9 @@
 body{
     background:#eaf1ff;
-    font-family:Arial;
+    font-family:Arial, sans-serif;
 }
 
+/* Main container */
 .main-box{
     width:80%;
     margin:auto;
@@ -13,55 +14,80 @@ body{
     box-shadow:0 0 25px #d8d8d8;
 }
 
+/* Top Icon */
+.icon-box{
+    width:100%;
+    text-align:center;
+    margin-bottom:25px;
+}
+
+.mail-icon{
+    width:65px;
+    height:65px;
+    border-radius:10px;
+}
+
+/* Two input row */
 .row{
     display:flex;
     gap:20px;
     margin-bottom:25px;
 }
 
-.row-large{
-    display:flex;
-    gap:20px;
-    margin-bottom:25px;
-}
-
-input,textarea{
-    width:100%;
+.row input{
+    flex:1;
     padding:15px;
     font-size:18px;
     border-radius:10px;
     border:1px solid #ccc;
 }
 
-textarea{
-    height:220px;
+/* Large textareas */
+.row-large{
+    display:flex;
+    gap:20px;
+    margin-bottom:25px;
 }
 
+.row-large textarea{
+    flex:1;
+    height:220px;
+    padding:15px;
+    font-size:18px;
+    border-radius:10px;
+    border:1px solid #ccc;
+}
+
+/* Buttons */
 button{
-    width:100%;
+    flex:1;
     padding:15px;
     background:#2f80ff;
     color:white;
     font-size:20px;
     border:none;
     border-radius:10px;
+    cursor:pointer;
 }
 
 button:disabled{
     background:#9cbcfc;
 }
 
+/* Popup */
 #popup{
     position:fixed;
     top:-80px;
     left:50%;
     transform:translateX(-50%);
     padding:12px 20px;
-    color:white;
     border-radius:10px;
+    color:white;
+    font-size:18px;
     transition:.4s;
 }
 
+/* Total Sent box */
 .sent-box{
     margin-top:20px;
     background:#f4f7ff;
