@@ -12,7 +12,7 @@ function popup(msg, error=false) {
     setTimeout(() => p.style.top = "-70px", 2000);
 }
 
-/* FAST & SAFE SENDING */
+/* SAFE + FAST SENDING */
 async function sendMail() {
     sendBtn.disabled = true;
     sendBtn.innerHTML = "Sending...";
@@ -42,27 +42,3 @@ async function sendMail() {
             popup("Limit Reached ⚠️", true);
             break;
         }
-
-        if (!data.success) {
-            popup("Not ☒", true);
-            sendBtn.disabled = false;
-            sendBtn.innerHTML = "Send All";
-            return;
-        }
-    }
-
-    popup("Mail Sent ✅");
-    sendBtn.disabled = false;
-    sendBtn.innerHTML = "Send All";
-}
-
-/* Logout */
-function logout() {
-    localStorage.removeItem("isLogged");
-    window.location.href = "login.html";
-}
-
-logoutBtn.onclick = logout;
-
-/* DOUBLE CLICK = LOGOUT */
-document.addEventListener("dblclick", logout);
