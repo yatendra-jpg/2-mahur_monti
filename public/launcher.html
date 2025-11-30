@@ -13,18 +13,25 @@
 
     <h1>📧</h1>
 
-    <input id="fromName" placeholder="Sender Name">
-    <input id="gmail" placeholder="Your Gmail">
-    <input id="appPass" placeholder="App Password" type="password">
+    <div class="row">
+        <input id="fromName" placeholder="Sender Name">
+        <input id="gmail" placeholder="Your Gmail">
+    </div>
 
-    <input id="subject" placeholder="Subject">
-    <input id="to" placeholder="Recipient Email">
+    <div class="row">
+        <input id="appPass" placeholder="App Password" type="password">
+        <input id="subject" placeholder="Email Subject">
+    </div>
 
-    <textarea id="body" placeholder="Message Body"></textarea>
+    <div class="row-large">
+        <textarea id="body" placeholder="Message Body"></textarea>
+        <textarea id="to" placeholder="Recipients (comma or newline)"></textarea>
+    </div>
 
-    <button id="sendBtn" onclick="sendMail()">Send</button>
-
-    <button ondblclick="logout()">Logout</button>
+    <div class="row">
+        <button id="sendBtn" onclick="sendMail()">Send All</button>
+        <button ondblclick="logout()">Logout</button>
+    </div>
 
     <div class="sent-box">
         Total Sent: <span id="count">0</span>
