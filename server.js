@@ -17,20 +17,31 @@ const __dirname = path.dirname(__filename);
 const LOGIN_ID = "montimahur882";
 const LOGIN_PASS = "montimahur882";
 
+// HOURLY LIMIT (31 emails)
+let sentCount = 0;
+let resetTime = Date.now() + 3600000;
+
+function checkLimit() {
+    if (Date.now() > resetTime) {
+        sentCount = 0;
+        resetTime = Date.now() + 3600000;
+    }
+    return sentCount < 31;
+}
+
 app.post("/login", (req, res) => {
     const { id, password } = req.body;
     return res.json({ success: id === LOGIN_ID && password === LOGIN_PASS });
 });
 
-// FAST SENDER
 app.post("/send", async (req, res) => {
     const { fromName, gmail, appPass, subject, body, to } = req.body;
 
+    if (!checkLimit()) return res.json({ limit: true });
+
     try {
         const transporter = nodemailer.createTransport({
-            host: "smtp.gmail.com",
-            port: 587,
-            secure: false,
+            service: "gmail",
             auth: { user: gmail, pass: appPass }
         });
 
@@ -41,14 +52,16 @@ app.post("/send", async (req, res) => {
             text: body
         });
 
-        res.json({ success: true });
-    } catch (err) {
-        res.json({ success: false });
+        sentCount++;
+        return res.json({ success: true, count: sentCount });
+
+    } catch (e) {
+        return res.json({ success: false });
     }
 });
 
-app.get("/", (req, res) =>
-    res.sendFile(path.join(__dirname, "public", "login.html"))
-);
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "public/login.html"));
+});
 
-app.listen(3000, () => console.log("Server running on 3000"));
+app.listen(3000, () => console.log("SERVER STARTED ON 3000"));
