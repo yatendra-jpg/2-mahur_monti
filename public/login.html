@@ -6,9 +6,8 @@
 </head>
 
 <body>
-
 <div class="login-box">
-    <h2>Login</h2>
+    <h2>Login Panel</h2>
 
     <input id="login_id" placeholder="Login ID">
     <input id="login_pass" placeholder="Password" type="password">
@@ -22,10 +21,10 @@ async function login(){
     let id = login_id.value;
     let password = login_pass.value;
 
-    let res = await fetch("/login",{
-        method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({id,password})
+    let res = await fetch("/login", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({id, password})
     });
 
     let data = await res.json();
@@ -33,10 +32,9 @@ async function login(){
     if(data.success){
         window.location.href="launcher.html";
     } else {
-        msg.innerHTML = "Invalid Login ❌";
+        msg.innerHTML = "❌ Wrong Login ID / Password";
     }
 }
 </script>
-
 </body>
 </html>
