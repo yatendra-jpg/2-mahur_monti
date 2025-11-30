@@ -1,69 +1,65 @@
+if (!localStorage.getItem("isLogged")) {
+    window.location.href = "login.html";
+}
+
 let count = 0;
 
-/* Update Sent Counter */
-function update(){
-    document.getElementById("count").innerText = count;
-}
-
-/* Popup */
-function popup(msg, type){
+function showPopup(msg, type = "success") {
     let p = document.getElementById("popup");
-    p.innerHTML = msg;
     p.style.background = type === "error" ? "#ff3b3b" : "#28c746";
+    p.innerHTML = msg;
     p.style.top = "20px";
-    setTimeout(()=> p.style.top = "-80px",3000);
+    setTimeout(() => p.style.top = "-80px", 2000);
 }
 
-/* Send Emails One by One */
-async function sendMail(){
+async function sendMail() {
     sendBtn.disabled = true;
     sendBtn.innerHTML = "Sending...";
 
-    let recList = to.value.split(/[\n,]+/).map(x=>x.trim()).filter(x=>x);
+    let rec = to.value.split(/[\n,]+/).map(x => x.trim()).filter(x => x);
 
-    for(const emailTo of recList){
-
+    for (let email of rec) {
         let res = await fetch("/send", {
             method:"POST",
-            headers:{"Content-Type":"application/json"},
+            headers:{ "Content-Type":"application/json" },
             body:JSON.stringify({
                 fromName: fromName.value,
                 gmail: gmail.value,
                 appPass: appPass.value,
                 subject: subject.value,
                 body: body.value,
-                to: emailTo
+                to: email
             })
         });
 
         let data = await res.json();
-
-        if(data.success){
+        if (data.success) {
             count++;
-            update();
+            document.getElementById("count").innerText = count;
         } else {
-            popup("❌ Wrong Gmail/App Password", "error");
+            showPopup("❌ Wrong Gmail / App Password", "error");
             break;
         }
     }
 
+    showPopup("📩 Emails Sent Successfully!");
     sendBtn.disabled = false;
     sendBtn.innerHTML = "Send All";
-    popup("Mail Sent ✅", "success");
 }
 
-/* DOUBLE CLICK LOGOUT FIX */
-let logoutClicks = 0;
+/* LOGOUT */
+function logout() {
+    localStorage.removeItem("isLogged");
+    window.location.href = "login.html";
+}
 
-document.getElementById("logoutBtn").addEventListener("click", () => {
-    logoutClicks++;
+logoutBtn.onclick = logout;
 
-    // Reset if no second click within 400 ms
-    setTimeout(() => logoutClicks = 0, 400);
+/* DOUBLE CLICK LOGOUT ANYWHERE */
+let clickAt = 0;
 
-    if(logoutClicks === 2){
-        count = 0;
-        update();
-        window.location.href = "login.html";
-    }
+document.addEventListener("click", () => {
+    let now = Date.now();
+    if (now - clickAt < 250) logout();
+    clickAt = now;
 });
