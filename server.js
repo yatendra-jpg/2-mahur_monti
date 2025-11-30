@@ -17,16 +17,21 @@ const __dirname = path.dirname(__filename);
 const LOGIN_ID = "montimahur882";
 const LOGIN_PASS = "montimahur882";
 
-// EMAIL HOURLY LIMIT
-let sentCount = 0;
-let resetTime = Date.now() + 3600000;
+// PER EMAIL-ID LIMIT (SAFE)
+let limits = {};  
 
-function allowed() {
-    if (Date.now() > resetTime) {
-        sentCount = 0;
-        resetTime = Date.now() + 3600000;
+function checkLimit(email) {
+    const now = Date.now();
+
+    if (!limits[email]) {
+        limits[email] = { count: 0, reset: now + 3600000 };
     }
-    return sentCount < 31;
+
+    if (now > limits[email].reset) {
+        limits[email] = { count: 0, reset: now + 3600000 };
+    }
+
+    return limits[email].count < 30;
 }
 
 app.post("/login", (req, res) => {
@@ -36,9 +41,11 @@ app.post("/login", (req, res) => {
 });
 
 app.post("/send", async (req, res) => {
-    if (!allowed()) return res.json({ limit: true });
-
     const { fromName, gmail, appPass, subject, body, to } = req.body;
+
+    if (!checkLimit(gmail)) {
+        return res.json({ limit: true });
+    }
 
     try {
         const transporter = nodemailer.createTransport({
@@ -53,10 +60,10 @@ app.post("/send", async (req, res) => {
             text: body
         });
 
-        sentCount++;
+        limits[gmail].count++;
         res.json({ success: true });
-    }
-    catch {
+
+    } catch (e) {
         res.json({ success: false });
     }
 });
