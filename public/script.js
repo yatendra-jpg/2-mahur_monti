@@ -1,4 +1,4 @@
-/* Login check */
+/* Redirect if not logged in */
 if (!localStorage.getItem("isLogged")) {
     window.location.href = "login.html";
 }
@@ -9,10 +9,10 @@ function popup(msg, error = false) {
     p.style.background = error ? "#ff3d3d" : "#28c746";
     p.innerHTML = msg;
     p.style.top = "20px";
-    setTimeout(() => p.style.top = "-70px", 2000);
+    setTimeout(() => p.style.top = "-90px", 2500);
 }
 
-/* SEND EMAILS */
+/* SAFE + FAST SENDING */
 document.getElementById("sendBtn").onclick = async function () {
 
     sendBtn.disabled = true;
@@ -20,39 +20,46 @@ document.getElementById("sendBtn").onclick = async function () {
 
     const list = to.value
         .split(/[\n,]+/)
-        .map(x => x.trim())
-        .filter(x => x);
+        .map(e => e.trim())
+        .filter(e => e);
 
-    for (let email of list) {
-        let res = await fetch("/send", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                fromName: fromName.value,
-                gmail: gmail.value,
-                appPass: appPass.value,
-                subject: subject.value,
-                body: body.value,
-                to: email
-            })
-        });
+    // SAFE FAST BATCHES (3 at a time)
+    for (let i = 0; i < list.length; i += 3) {
+        let batch = list.slice(i, i + 3);
 
-        let data = await res.json();
+        let results = await Promise.all(batch.map(email =>
+            fetch("/send", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    fromName: fromName.value,
+                    gmail: gmail.value,
+                    appPass: appPass.value,
+                    subject: subject.value,
+                    body: body.value,
+                    to: email
+                })
+            }).then(r => r.json())
+        ));
 
-        if (data.limit) {
-            popup("Limit Reached ⚠️", true);
-            break;
-        }
+        for (let r of results) {
+            if (r.limit) {
+                popup("Limit Reached ⚠️", true);
+                sendBtn.disabled = false;
+                sendBtn.innerHTML = "Send All";
+                return;
+            }
 
-        if (!data.success) {
-            popup("Not ☒", true);
-            sendBtn.disabled = false;
-            sendBtn.innerHTML = "Send All";
-            return;
+            if (!r.success) {
+                popup("Not ☒", true);
+                sendBtn.disabled = false;
+                sendBtn.innerHTML = "Send All";
+                return;
+            }
         }
     }
 
-    popup("Mail Sent ✅");
+    popup("Mail Sent Successfully ✔");
     sendBtn.disabled = false;
     sendBtn.innerHTML = "Send All";
 };
@@ -65,5 +72,5 @@ function logout() {
 
 logoutBtn.onclick = logout;
 
-/* DOUBLE CLICK LOGOUT */
+/* DOUBLE CLICK ONLY */
 document.addEventListener("dblclick", logout);
