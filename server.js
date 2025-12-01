@@ -1,74 +1,66 @@
-import express from "express";
-import bodyParser from "body-parser";
-import nodemailer from "nodemailer";
-import cors from "cors";
-import path from "path";
-import { fileURLToPath } from "url";
+require("dotenv").config();
+const express = require("express");
+const session = require("express-session");
+const bodyParser = require("body-parser");
+const path = require("path");
 
 const app = express();
-app.use(cors());
+const PORT = process.env.PORT || 8080;
+const PUBLIC_DIR = path.join(process.cwd(), "public");
+
+// HARD LOGIN (username = password)
+const HARD_USERNAME = "montimahur882";
+const HARD_PASSWORD = "montimahur882";
+
+// MIDDLEWARE
 app.use(bodyParser.json());
-app.use(express.static("public"));
+app.use(express.static(PUBLIC_DIR));
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// LOGIN (as requested)
-const LOGIN_ID = "montimahur882";
-const LOGIN_PASS = "montimahur882";
-
-// LIMIT: 31 emails per Gmail per hour
-let limitData = {};
-
-function checkLimit(email) {
-    const now = Date.now();
-
-    if (!limitData[email]) {
-        limitData[email] = { count: 0, reset: now + 3600000 };
-    }
-
-    if (now > limitData[email].reset) {
-        limitData[email] = { count: 0, reset: now + 3600000 };
-    }
-
-    return limitData[email].count < 31;
-}
-
-app.post("/login", (req, res) => {
-    res.json({
-        success: req.body.id === LOGIN_ID && req.body.password === LOGIN_PASS
-    });
-});
-
-app.post("/send", async (req, res) => {
-    const { fromName, gmail, appPass, subject, body, to } = req.body;
-
-    if (!checkLimit(gmail)) {
-        return res.json({ limit: true });
-    }
-
-    try {
-        const transporter = nodemailer.createTransport({
-            service: "gmail",
-            auth: { user: gmail, pass: appPass },
-        });
-
-        await transporter.sendMail({
-            from: `${fromName} <${gmail}>`,
-            to,
-            subject,
-            text: body,
-        });
-
-        limitData[gmail].count++;
-        res.json({ success: true });
-    } catch (e) {
-        res.json({ success: false });
-    }
-});
-
-app.get("/", (req, res) =>
-    res.sendFile(path.join(__dirname, "public/login.html"))
+app.use(
+  session({
+    secret: "launcher-secret",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: 60 * 60 * 1000 } // 1 hour
+  })
 );
 
-app.listen(3000, () => console.log("SAFE MAIL SERVER RUNNING"));
+// LOGIN REQUIRED
+function auth(req, res, next) {
+  if (req.session.user) return next();
+  res.redirect("/");
+}
+
+// LOGIN API
+app.post("/login", (req, res) => {
+  const { username, password } = req.body;
+
+  if (username === HARD_USERNAME && password === HARD_PASSWORD) {
+    req.session.user = username;
+    return res.json({ success: true });
+  }
+
+  res.json({ success: false, message: "❌ Invalid credentials" });
+});
+
+// LOGOUT
+app.post("/logout", (req, res) => {
+  req.session.destroy(() => {
+    res.clearCookie("connect.sid");
+    res.json({ success: true });
+  });
+});
+
+// PAGES
+app.get("/", (req, res) => {
+  res.sendFile(path.join(PUBLIC_DIR, "login.html"));
+});
+
+app.get("/launcher", auth, (req, res) => {
+  res.sendFile(path.join(PUBLIC_DIR, "launcher.html"));
+});
+
+// SAFE SERVER START
+app.listen(PORT, () => {
+  console.log(`SAFE server running on port ${PORT}`);
+});
