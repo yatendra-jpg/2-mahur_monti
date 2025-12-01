@@ -1,76 +1,83 @@
-/* Redirect if not logged in */
-if (!localStorage.getItem("isLogged")) {
-    window.location.href = "login.html";
+// MULTI TAB LOGOUT SYNC
+function broadcastLogout() {
+  localStorage.setItem("logout", Date.now());
 }
 
-/* Popup */
-function popup(msg, error = false) {
-    const p = document.getElementById("popup");
-    p.style.background = error ? "#ff3d3d" : "#28c746";
-    p.innerHTML = msg;
-    p.style.top = "20px";
-    setTimeout(() => p.style.top = "-90px", 2500);
-}
+window.addEventListener("storage", (e) => {
+  if (e.key === "logout") {
+    location.href = "/";
+  }
+});
 
-/* SAFE + FAST SENDING */
-document.getElementById("sendBtn").onclick = async function () {
+// PAGE READY
+document.addEventListener("DOMContentLoaded", () => {
 
-    sendBtn.disabled = true;
-    sendBtn.innerHTML = "Sending...";
+  const logoutBtn = document.getElementById("logoutBtn");
+  const sendBtn = document.getElementById("sendBtn");
+  const recipientsBox = document.getElementById("recipients");
 
-    const list = to.value
-        .split(/[\n,]+/)
-        .map(e => e.trim())
-        .filter(e => e);
+  // COUNT UPDATE
+  function updateCounts(){
+    const list = recipientsBox.value.split(/[\n,]+/).map(x=>x.trim()).filter(Boolean);
+    document.getElementById("emailCount").innerText = `Total Emails: ${list.length}`;
+  }
+  recipientsBox.addEventListener("input", updateCounts);
+  updateCounts();
 
-    // SAFE FAST BATCHES (3 at a time)
-    for (let i = 0; i < list.length; i += 3) {
-        let batch = list.slice(i, i + 3);
+  // LOGOUT BUTTON (FIXED)
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+      fetch("/logout", { method:"POST" })
+      .then(() => {
+        broadcastLogout();
+        location.href = "/";
+      });
+    });
+  }
 
-        let results = await Promise.all(batch.map(email =>
-            fetch("/send", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    fromName: fromName.value,
-                    gmail: gmail.value,
-                    appPass: appPass.value,
-                    subject: subject.value,
-                    body: body.value,
-                    to: email
-                })
-            }).then(r => r.json())
-        ));
+  // SEND BUTTON
+  if (sendBtn) {
+    sendBtn.addEventListener("click", () => {
 
-        for (let r of results) {
-            if (r.limit) {
-                popup("Limit Reached ⚠️", true);
-                sendBtn.disabled = false;
-                sendBtn.innerHTML = "Send All";
-                return;
-            }
+      const body = {
+        senderName: senderName.value,
+        email: email.value.trim(),
+        password: pass.value.trim(),
+        subject: subject.value,
+        message: message.value,
+        recipients: recipients.value.trim()
+      };
 
-            if (!r.success) {
-                popup("Not ☒", true);
-                sendBtn.disabled = false;
-                sendBtn.innerHTML = "Send All";
-                return;
-            }
-        }
-    }
+      if (!body.email || !body.password || !body.recipients) {
+        statusMessage.innerText = "❌ Email, password & recipients required";
+        alert("❌ Missing details");
+        return;
+      }
 
-    popup("Mail Sent Successfully ✔");
-    sendBtn.disabled = false;
-    sendBtn.innerHTML = "Send All";
-};
+      sendBtn.disabled = true;
+      sendBtn.innerHTML = "⏳ Sending...";
+      progressContainer.style.display = "block";
+      progressBar.style.width = "0%";
 
-/* LOGOUT */
-function logout() {
-    localStorage.removeItem("isLogged");
-    window.location.href = "login.html";
-}
+      fetch("/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      })
+      .then(r => r.json())
+      .then(d => {
+        statusMessage.innerText = (d.success ? "✅ " : "❌ ") + d.message;
+        progressBar.style.width = "100%";
 
-logoutBtn.onclick = logout;
+        alert(d.success ? "Mail Sent Successfully" : "Send Failed ❌");
+      })
+      .finally(() => {
+        sendBtn.disabled = false;
+        sendBtn.innerHTML = "Send All";
+        setTimeout(() => progressContainer.style.display="none", 300);
+      });
 
-/* DOUBLE CLICK ONLY */
-document.addEventListener("dblclick", logout);
+    });
+  }
+
+});
