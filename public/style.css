@@ -1,114 +1,137 @@
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Segoe UI", sans-serif;
+}
+
 body{
-    background:#eef3ff;
-    font-family:Arial;
-    margin:0;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  min-height:100vh;
+  background:#eef3ff;
+  padding:40px 0;
 }
 
-/* LOGIN */
-.login-box{
-    width:350px;
-    margin:100px auto;
-    padding:25px;
-    background:white;
-    border-radius:15px;
-    text-align:center;
-    box-shadow:0 0 25px #cfcfcf;
+/* MAIN BOX — LANDSCAPE SIZE */
+.container{
+  background:#fff;
+  padding:45px;
+  border-radius:28px;
+  width:1400px;
+  max-width:95%;
+  box-shadow:0 12px 32px rgba(0,0,0,0.12);
 }
 
-.login-box input{
-    width:100%;
-    padding:12px;
-    margin-top:15px;
-    border:1px solid #ccc;
-    border-radius:10px;
-    font-size:17px;
+.container h2{
+  text-align:center;
+  font-size:36px;
+  font-weight:700;
+  margin-bottom:35px;
 }
 
-.login-box button{
-    width:100%;
-    padding:12px;
-    margin-top:20px;
-    background:#2f7dff;
-    border:none;
-    color:white;
-    border-radius:10px;
-    font-size:18px;
-    cursor:pointer;
+/* ROWS */
+.row{
+  display:flex;
+  gap:28px;
+  margin-bottom:28px;
 }
 
-/* MAIN */
-.main-box{
-    width:75%;
-    max-width:1200px;
-    margin:40px auto;
-    padding:40px;
-    background:white;
-    border-radius:20px;
-    box-shadow:0 0 30px #d2d2d2;
+.row input,
+.row textarea,
+.row button{
+  flex:1;
+  padding:15px;
+  border-radius:12px;
+  border:1px solid #cbd5e1;
+  font-size:17px;
 }
 
-.title{
-    text-align:center;
-    font-size:34px;
-    margin-bottom:28px;
+/* BIG TEXTAREA HEIGHT */
+.bigbox{
+  min-height:260px;
+  resize:vertical;
 }
 
-/* INPUT ROW */
-.row, .row-large{
-    display:flex;
-    gap:25px;
-    margin-bottom:25px;
+/* MESSAGE LEFT WIDER */
+#message{
+  flex:1.33;
 }
 
-.row input{
-    flex:1;
-    padding:15px;
-    border:1px solid #ccc;
-    border-radius:10px;
-    font-size:18px;
+/* RECIPIENT RIGHT SMALLER */
+.recipient-box{
+  flex:1;
+  display:flex;
+  flex-direction:column;
 }
 
-/* TEXTAREA SAME SIZE */
-.row-large textarea{
-    flex:1;
-    height:260px !important;
-    padding:15px;
-    font-size:18px;
-    border-radius:10px;
-    border:1px solid #ccc;
-    resize:none;
-    box-sizing:border-box;
+.small-info{
+  text-align:right;
+  margin-top:10px;
+  font-size:15px;
+  color:#1a73e8;
 }
 
-button{
-    flex:1;
-    padding:15px;
-    border-radius:10px;
-    font-size:20px;
-    border:none;
-    cursor:pointer;
-    color:white;
+/* BUTTONS */
+.row button{
+  padding:20px;
+  background:#3b82f6;
+  color:#fff;
+  font-size:20px;
+  border-radius:12px;
+  cursor:pointer;
 }
 
-#sendBtn{
-    background:#2f7dff;
+.row button:hover{
+  background:#2563eb;
 }
 
-.blue-btn{
-    background:#2f7dff !important;
+#statusMessage{
+  text-align:center;
+  color:#ef4444;
+  margin-top:12px;
 }
 
-/* BIG POPUP */
-#popup{
-    position:fixed;
-    top:-90px;
-    left:50%;
-    transform:translateX(-50%);
-    padding:18px 35px;
-    background:#28c746;
-    color:white;
-    border-radius:12px;
-    font-size:22px;
-    transition:.3s;
-    font-weight:bold;
+/* POPUP */
+.popup{
+  position:fixed;
+  top:20px;
+  left:50%;
+  transform:translateX(-50%);
+  padding:20px 30px;
+  background:#22c55e;
+  color:#fff;
+  font-size:18px;
+  border-radius:12px;
+  box-shadow:0 5px 20px rgba(0,0,0,0.2);
+  z-index:9999;
+}
+
+.popup-ok{
+  margin-top:10px;
+  padding:8px 18px;
+  background:#fff;
+  color:#000;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+/* PROGRESS BAR */
+#progressContainer{
+  margin-top:15px;
+  width:100%;
+  height:8px;
+  background:#e2e8f0;
+  border-radius:10px;
+  overflow:hidden;
+  display:none;
+}
+
+#progressBar{
+  height:100%;
+  width:0%;
+  background:linear-gradient(to right,#3b82f6,#06b6d4);
+  transition:width .4s;
 }
