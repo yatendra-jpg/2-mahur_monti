@@ -53,7 +53,7 @@ body{
     margin-bottom:28px;
 }
 
-/* INPUTS */
+/* INPUT ROW */
 .row, .row-large{
     display:flex;
     gap:25px;
@@ -68,7 +68,7 @@ body{
     font-size:18px;
 }
 
-/* TEXTAREA SAME SIZE FIX */
+/* TEXTAREA SAME SIZE */
 .row-large textarea{
     flex:1;
     height:260px !important;
@@ -98,9 +98,17 @@ button{
     background:#2f7dff !important;
 }
 
-/* POPUP */
+/* BIG POPUP */
 #popup{
     position:fixed;
-    top:-70px;
+    top:-90px;
     left:50%;
     transform:translateX(-50%);
+    padding:18px 35px;
+    background:#28c746;
+    color:white;
+    border-radius:12px;
+    font-size:22px;
+    transition:.3s;
+    font-weight:bold;
+}
