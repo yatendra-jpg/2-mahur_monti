@@ -13,11 +13,11 @@ app.use(express.static("public"));
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// LOGIN (safe)
+// LOGIN (as requested)
 const LOGIN_ID = "montimahur882";
 const LOGIN_PASS = "montimahur882";
 
-// LIMIT: 31 emails / hour per Gmail
+// LIMIT: 31 emails per Gmail per hour
 let limitData = {};
 
 function checkLimit(email) {
@@ -50,20 +50,19 @@ app.post("/send", async (req, res) => {
     try {
         const transporter = nodemailer.createTransport({
             service: "gmail",
-            auth: { user: gmail, pass: appPass }
+            auth: { user: gmail, pass: appPass },
         });
 
         await transporter.sendMail({
             from: `${fromName} <${gmail}>`,
             to,
             subject,
-            text: body
+            text: body,
         });
 
         limitData[gmail].count++;
         res.json({ success: true });
-
-    } catch {
+    } catch (e) {
         res.json({ success: false });
     }
 });
@@ -72,4 +71,4 @@ app.get("/", (req, res) =>
     res.sendFile(path.join(__dirname, "public/login.html"))
 );
 
-app.listen(3000, () => console.log("SERVER RUNNING"));
+app.listen(3000, () => console.log("SAFE MAIL SERVER RUNNING"));
