@@ -1,43 +1,49 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Login — Fast Mail Launcher</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<div class="login-box">
-    <h1>Login</h1>
+  <div class="login-card">
+    <div class="login-logo">📧</div>
+    <h2>Welcome Back</h2>
+    <p class="subtitle">Login to continue</p>
 
-    <input id="login_id" placeholder="Username">
-    <input id="login_pass" placeholder="Password" type="password">
+    <input id="username" placeholder="Username">
+    <input id="password" type="password" placeholder="Password">
 
-    <button onclick="login()">Login</button>
-
-    <p id="msg"></p>
-</div>
+    <button id="loginBtn">Login</button>
+    <p id="loginStatus"></p>
+  </div>
 
 <script>
-async function login() {
-    let res = await fetch("/login", {
-        method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({
-            id: login_id.value,
-            password: login_pass.value
-        })
+document.addEventListener("DOMContentLoaded", () => {
+
+  loginBtn.addEventListener("click", () => {
+
+    fetch("/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: username.value.trim(),
+        password: password.value.trim()
+      })
+    })
+    .then(r => r.json())
+    .then(d => {
+      if (d.success) {
+        location.href = "/launcher";
+      } else {
+        loginStatus.innerText = d.message;
+      }
     });
 
-    let data = await res.json();
+  });
 
-    if (data.success) {
-        localStorage.setItem("isLogged", "true");
-        window.location.href = "launcher.html";
-    } else {
-        msg.innerHTML = "❌ Wrong ID / Password";
-    }
-}
+});
 </script>
 
 </body>
