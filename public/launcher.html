@@ -5,6 +5,7 @@
   <title>Fast Mail Launcher</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
 <div class="container">
@@ -20,12 +21,11 @@
     <input id="subject" placeholder="Email Subject">
   </div>
 
-  <div class="row">
+  <div class="row landscape-row">
     <textarea id="message" class="bigbox" placeholder="Message Body"></textarea>
 
     <div class="recipient-box">
       <textarea id="recipients" class="bigbox" placeholder="Recipients (comma or newline)"></textarea>
-
       <div class="small-info">
         <span id="emailCount">Total Emails: 0</span><br>
         <span id="remainingCount">Remaining this hour: 31</span>
@@ -39,11 +39,6 @@
   </div>
 
   <p id="statusMessage"></p>
-
-  <div id="progressContainer" style="display:none;">
-    <div id="progressBar"></div>
-  </div>
-
 </div>
 
 <script src="script.js"></script>
