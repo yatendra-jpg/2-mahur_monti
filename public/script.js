@@ -34,19 +34,15 @@ sendBtn?.addEventListener("click", () => {
   sendBtn.innerHTML = "⏳ Sending...";
 
   fetch("/send", {
-    method: "POST",
-    headers: { "Content-Type":"application/json" },
-    body: JSON.stringify(body)
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify(body)
   })
   .then(r => r.json())
   .then(d => {
     statusMessage.innerText = (d.success ? "✅ " : "❌ ") + d.message;
-
-    if (d.success) {
-      setTimeout(() => alert("✅ Mail Sent Successfully"), 300);
-    } else {
-      alert("❌ " + d.message);
-    }
+    if (d.success) setTimeout(() => alert("✅ Mail Sent Successfully"), 300);
+    else alert("❌ " + d.message);
   })
   .finally(() => {
     sendBtn.disabled = false;
