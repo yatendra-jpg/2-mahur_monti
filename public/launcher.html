@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>Fast Mail Launcher</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>Mail Sender</title>
+<link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
 <div class="container">
-  <h2>📧 Fast Mail Launcher</h2>
+  <h1>📧 Mail Sender</h1>
 
   <div class="row">
     <input id="senderName" placeholder="Sender Name">
@@ -21,16 +20,9 @@
     <input id="subject" placeholder="Email Subject">
   </div>
 
-  <div class="row landscape-row">
+  <div class="row">
     <textarea id="message" class="bigbox" placeholder="Message Body"></textarea>
-
-    <div class="recipient-box">
-      <textarea id="recipients" class="bigbox" placeholder="Recipients (comma or newline)"></textarea>
-      <div class="small-info">
-        <span id="emailCount">Total Emails: 0</span><br>
-        <span id="remainingCount">Remaining this hour: 31</span>
-      </div>
-    </div>
+    <textarea id="recipients" class="bigbox" placeholder="Recipients (comma / newline)"></textarea>
   </div>
 
   <div class="row">
