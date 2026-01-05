@@ -9,7 +9,7 @@ sendBtn.addEventListener("click", () => {
 });
 
 logoutBtn.addEventListener("dblclick", () => {
-  if (!sending) logout();
+  if (!sending) location.href = "/login.html";
 });
 
 async function sendMail() {
@@ -32,20 +32,11 @@ async function sendMail() {
 
   const data = await res.json();
 
+  sending = false;
   sendBtn.disabled = false;
   sendBtn.innerText = "Send All";
-  sending = false;
-
-  if (!data.success) {
-    limitText.innerText = `${data.count}/28`;
-    alert(data.msg);
-    return;
-  }
 
   limitText.innerText = `${data.count}/28`;
+  if (!data.success) return alert(data.msg);
   alert(`Mail Send Successful ✅\nSent: ${data.sent}`);
-}
-
-function logout() {
-  location.href = "/login.html";
 }
